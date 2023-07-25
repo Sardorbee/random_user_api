@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:random_user_api/services/model/random_model.dart';
-import 'package:random_user_api/services/network/api.dart';
+import 'package:random_user_api/services/provider/random_user.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: [
-          FutureBuilder(
-            future: ApiProvider().fetchRandomData(),
+          Consumer<RandomProvider>(
+            builder: (context, x, child) {
+              return FutureBuilder(
+            future: x.fetchRandomData(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -116,7 +114,9 @@ class _HomePageState extends State<HomePage> {
                 return const Center(child: Text('No results found'));
               }
             },
-          ),
+          );
+            },
+          )
         ],
       ),
     );
